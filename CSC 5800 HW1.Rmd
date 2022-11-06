@@ -1,0 +1,249 @@
+---
+title: "CSC 5800 HW1"
+author: "Joshua Rieck"
+date: "2022-09-26"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Problem 1.
+## Discuss whether or not each of the following activities is a data mining task. If the answer is yes, then also specify which one of the following categories it will belong to : (i) classification (ii) association analysis (iii) clustering (iv) regression or (v) anomaly  detection) 
+
+**(20 Points; 2.5 Points each)**
+ 
+### (a) Sorting a student database based on student identification numbers.  
+
+No. Student IDs are randomly assigned to the individual.
+
+### (b)  By looking at a CT scan, a doctor wants to identify if a patient has cancer or not. There are a lot of labeled CT scans that the doctor will use for making the decision.  
+
+Yes. This is a clustering analysis
+
+### (c)  An  image  analyst  obtains  some  new  images  and  wants  to  automatically  detect  the number  of  distinct objects  in  the image. He doesn’t have any prior information about these objects  
+
+Yes. This is a classification analysis
+
+### (d) Predicting the outcomes of tossing a (fair) pair of dice. 
+
+No.
+
+### (e) Predicting the future stock price of a company using historical records.
+
+Yes. This is regression analysis
+
+### (f) In an Internet search engine company, there is a need to find potential users who will click a particular advertisement on the webpage. 
+
+Yes. This is association analysis
+
+### (g) Monitoring the heart rate of a patient for abnormalities.
+
+Yes. This is anomaly detection
+
+### (h) Extracting the frequencies of a sound wave. 
+
+No.
+
+
+# Problem  2.
+## Classify  the  following  attributes  as  binary,  discrete,  or  continuous.  Also, classify them as qualitative (nominal or ordinal)  or quantitative (interval  or ratio). Some cases  may  have  more  than  one  interpretation,  so  briefly  indicate  your  reasoning  if  you think there may be some ambiguity. 
+## For example: Age in years. Answer: Discrete, quantitative, ratio 
+
+**(10 Points; 2 Points each) **
+
+### (a) Brightness as measured by a light meter 
+
+Continuous, quantitative, ratio
+
+### (b) Angles as measured in degrees between 0◦ and 360◦. 
+
+Continuous, quantitative, ordinal
+
+### (c) Bronze, Silver, and Gold medals as awarded at the Olympics. 
+
+Discrete, qualitative, ordinal
+
+### (d) Time in terms of AM or PM. 
+
+Binary, qualitative, nominal
+
+### (e) Military rank. 
+
+Discrete, qualitative, ordinal
+
+
+# Problem 3.
+## This problem is an R exercise
+
+**(30 Points; 10 Points each)**
+
+### (a) Load iris.dat file (available in R) – Give the basic description of the data matrix; no. of data points, no. of features, no. of classes  
+
+```{r}
+library(datasets)
+data(iris)
+str(iris)
+nrow(iris)
+ncol(iris)
+```
+
+
+### (b) Give some basic statistics (such as mean, median, standard deviation, min, max) for each of these features 
+
+```{r}
+summary(iris)
+```
+
+### (c) Plot the first two features of the data. Classes must be discriminated by using different symbols. Please label the figure. 
+
+```{r}
+x <- iris$Sepal.Length
+y <- iris$Sepal.Width
+colorfilter = iris$Species
+
+plot(x, y, col = colorfilter , xlab = "Sepal Length (cm)", ylab = "Sepal Width (cm)", main = "Sepal Length vs. Sepal Width" ) 
+legend("bottomright", fill = unique(colorfilter), legend = c( levels(colorfilter)))
+    
+```
+
+
+# Problem 4. 
+## Given a similarity measure *s* with values in the interval [0,1]. Plot and then compare d1 and d2 transform this similarity value into a dissimilarity value in the interval [0,∞].
+
+## d1 = (1-s)/s 
+## d2 = −log s. 
+
+**(10 Points; 5 Points each)**
+
+```{r}
+d1 <- function(s) {
+  return (1-s) / s
+}
+
+d2 <- function(s) {
+  return (-log(s))
+}
+
+curve(expr = d1)
+curve(expr = d2)
+```
+
+
+
+# Problem 5.
+## Consider a document-term matrix, where tfij is the frequency of the ith word (term)  in  the  jth  document  and  m  is  the  number  of  documents.  Consider  the  variable transformation that is defined by:
+
+## tf ij'  = tf ij * log  m / df i 
+
+## where dfi is the number of documents in which the ith term appears and is known as the document frequency of the term. This transformation is known as the inverse document frequency transformation. 
+
+**(10 Points; 5 Points each)**
+
+### (a) What is the effect of this transformation if a term occurs in one document? In every document?  
+![Example diagram](C:\Users\joshr\OneDrive\Documents\Capture.PNG)
+
+
+Having words show up in one document as opposed to all three gives back a higher frequency number for that word. This would allow for us to easily spot the document we need to retrieve based on searching for that word. If the word appears in all of the documents, that frequency number goes to zero. In the example above, I had 3 documents and I was looking for the term "bird" in each document. For the 1st table, the term only appears in document 1 and not in docs 2 and 3. So the transformation equation gives me a frequency value of 1.4313 for document 1 and 0 for the rest. In the 2nd table, the term "bird" appears in all 3 documents. This causes the transformation equation to give back a frequency value of 0 for all three docs.
+
+
+### (b) What might be the purpose of this transformation? 
+
+This equation is a good evaluater if you have a term that is more unique/ specific to a few documents as opposed to all of them. In a search engine of shared file system that has hundreds of thousands of files and documents, this equation will identify the few documents that have this specific term in them, and then rank them in order of highest frequency value to lowest. 
+
+# Problem 6. 
+## This problem compares and contrasts some similarity and distance measures.
+
+**(10 Points; 5 + 3 + 2)**
+
+### (a)  For  binary  data,  the  L1  distance  corresponds  to  the  Hamming  distance;  that  is,  the number of bits that are different between two binary vectors. The Jaccard similarity is  a measure  of  the  similarity  between  two  binary  vectors.  Compute  the  Hamming  distance and the Jaccard similarity between the following two binary vectors. 
+ 
+
+### x = 0101010101 
+### y = 0100011000 
+ 
+
+### (b)  Write the Simple Matching Coefficient in terms of the number of bits and the Hamming distance. 
+ 
+```{r}
+x <- c(0,1,0,1,0,1,0,1,0,1)
+y <- c(0,1,0,0,0,1,1,0,0,0)
+
+M01 <- length(which( (x==0) & (y==1) ))
+M10 <- length(which( (x==1) & (y==0) ))
+M00 <- length(which( (x==0) & (y==0) ))
+M11 <- length(which( (x==1) & (y==1) ))
+
+smc <- (M11 + M00) / (M01 + M10 + M11 + M00)
+smc
+
+# Hamming Distance
+sum(x != y)
+
+```
+ 
+ 
+### (c) Do you see any similarity between the Jaccard measure and the cosine measure? If so, explain?
+
+```{r}
+library(lsa)
+
+jaccard = (M11) / (M01 + M10 + M11)
+jaccard  
+
+# Cosine
+print(cosine(x, y))
+```
+There isn't a huge similarity between these two measurement outcomes
+
+
+# Problem 7. 
+## For  the  following  vectors,  x  and  y,  calculate  the  indicated  similarity  or distance measures.
+
+**(10 Points; 5 Points each))**
+
+### (a) x = (0,−1, 0, 1), y=(1, 0,−1, 0) cosine, correlation, Euclidean 
+
+```{r}
+x1 <- c(0,-1, 0, 1)
+y1 <- c(1, 0,-1, 0)
+
+# Cosine
+cosine(x1, y1)
+
+# Correlation
+cor(x1,y1)
+
+# Euclidean
+euclidean <- function(a, b) sqrt(sum((a - b)^2))
+euclidean(x1,y1)
+
+```
+
+### (b) x = (0, 1, 0, 1), y = (1, 0, 1, 0) cosine, correlation, Euclidean, Jaccard 
+
+```{r}
+x2 <- c(0, 1, 0, 1)
+y2 <- c(1, 0, 1, 0)
+
+# Cosine
+cosine(x2,y2)
+
+# Correlation
+cor(x2,y2)
+
+# Euclidean
+euclidean(x2,y2)
+
+# Jaccard
+jaccard <- function(x, y) {
+    intersection = length(intersect(x, y))
+    union = length(x) + length(y) - intersection
+    return (intersection/union)
+}
+
+jaccard(x2,y2)
+
+```
+
